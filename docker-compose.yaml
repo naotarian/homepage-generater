@@ -1,0 +1,29 @@
+version: '3'
+services:
+  hg_app:
+    build:
+      context: .
+      dockerfile: ./Docker/node/Dockerfile
+    container_name: hg_app
+    environment:
+      TZ: Asia/Tokyo
+      NODE_OPTIONS: "--max-old-space-size=8192"
+    volumes:
+      - ./src:/home/node/app
+      - yarn-cache:/home/node/.cache/yarn:rw
+    ports:
+      - '${IP}:3000:3000'
+    tty: true
+
+  nginx:
+    container_name: next-app-nginx
+    build:
+      context: .
+      dockerfile: ./Docker/nginx/Dockerfile
+    ports:
+      - "${IP}:8000:80"
+
+
+
+volumes:
+  yarn-cache:
